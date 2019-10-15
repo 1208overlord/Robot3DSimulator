@@ -1,0 +1,346 @@
+﻿<Window x:Class="MonkeyMotionControl.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:h="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
+        Loaded="mainWindow_Loaded" Closing="mainWindow_Closing" mc:Ignorable="d" 
+        Background="#FF212128" Foreground="White" WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
+        Width="1500" Height="900" Margin="0" Padding="0">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Style TargetType="GroupBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupBox}">
+                        <Grid SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="6"/>
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Column="0" CornerRadius="3" Grid.Row="1" Grid.RowSpan="3"/>
+                            <Border BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Grid.ColumnSpan="4" CornerRadius="3" Grid.Row="1" Grid.RowSpan="3">
+                                <Border.OpacityMask>
+                                    <MultiBinding ConverterParameter="7">
+                                        <MultiBinding.Converter>
+                                            <BorderGapMaskConverter/>
+                                        </MultiBinding.Converter>
+                                        <Binding ElementName="Header" Path="ActualWidth"/>
+                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
+                                        <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
+                                    </MultiBinding>
+                                </Border.OpacityMask>
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                                    <Border BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3"/>
+                                </Border>
+                            </Border>
+                            <Border x:Name="Header" Grid.Column="1" Padding="2,2,1,0" Grid.Row="0" Grid.RowSpan="2" Background="Transparent" BorderBrush="Transparent" CornerRadius="2" BorderThickness="0">
+                                <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                            <ContentPresenter Grid.ColumnSpan="2" Grid.Column="1" Margin="{TemplateBinding Padding}" Grid.Row="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Grid Margin="0,0,0,0" Width="1026" Height="504" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0*"/>
+            </Grid.ColumnDefinitions>
+            <h:HelixViewport3D x:Name="helix_viewport3d" BorderThickness="0" 
+                               RenderOptions.BitmapScalingMode="Fant"
+                               RenderOptions.EdgeMode="Unspecified" 
+                               IsManipulationEnabled="True"
+                               ShowViewCube="True" IsViewCubeEdgeClicksEnabled="True" ViewCubeHorizontalPosition="Left" ViewCubeVerticalPosition="Bottom"  
+                               ShowCoordinateSystem="True" CoordinateSystemHorizontalPosition="Right" CoordinateSystemVerticalPosition="Bottom" 
+                               ShowFrameRate="False"
+                               ShowFieldOfView="False" IsChangeFieldOfViewEnabled="False"
+                               ShowCameraInfo="False" ShowCameraTarget="True" IsInertiaEnabled="True"
+                               MouseLeftButtonUp="ViewPort3D_OnMouseLeftButtonUp" 
+                               MouseLeftButtonDown="ViewPort3D_OnMouseLeftButtonDown" 
+                               KeyUp="ViewPort3D_OnKeyUp"
+                               KeyDown="ViewPort3D_OnKeyDown" Margin="0,0,-459,-363" HorizontalAlignment="Left" Width="1485" Grid.ColumnSpan="2" Height="867" VerticalAlignment="Top"
+                               >
+                <h:HelixViewport3D.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                        <GradientStop Color="#66E2E2E2" Offset="0"/>
+                    </LinearGradientBrush>
+                </h:HelixViewport3D.Background>
+            </h:HelixViewport3D>
+            <GroupBox x:Name="grpbox_CurrentPosition" Header="" HorizontalAlignment="Left" Height="44" Margin="5,-10,0,0" VerticalAlignment="Top" Width="980" BorderThickness="0" FontSize="8">
+                <Grid>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="480" Height="30" Margin="0,0,0,0"  >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="76" Height="22" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="0" Grid.Row="0" Background="#99898989">
+                            <Grid>
+                                <TextBlock Text="J1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_J1" Text="0.00" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99898989" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="1" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="J2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_J2" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99898989" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="2" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="J3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_J3" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99898989" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="3" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="J4" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_J4" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99898989" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="4" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="J5" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_J5" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99898989" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="5" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="J6" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_J6" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Width="480" Height="30" Margin="0,0,0,0"  >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="76" Height="22" Background="#99B6B6B6" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="0" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="X" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_X" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99B6B6B6" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="1" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="Y" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_Y" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99B6B6B6" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="2" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="Z" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_Z" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99B6B6B6" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="3" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="RX" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_RX" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99B6B6B6" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="4" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="RY" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_RY" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                        <Border Width="76" Height="22" Background="#99B6B6B6" BorderThickness="0" CornerRadius="5,5,5,5" Grid.Column="5" Grid.Row="0">
+                            <Grid>
+                                <TextBlock Text="RZ" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Roboto" />
+                                <TextBlock x:Name="tb_robotPos_RZ" Text="0.00"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,4,3" Width="55" TextAlignment="Center" FontFamily="Roboto" FontSize="10" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Robotics Library Test" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="10" Margin="187,34,0,0" Height="76" Width="363">
+                <Grid>
+                    <Button Content="IK" HorizontalAlignment="Left" VerticalAlignment="Top" Height="19" Width="22" Margin="329,10,0,0" />
+                    <Label x:Name="IKtestX" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="4,10,0,25" FontSize="10"/>
+                    <Label x:Name="IKtestY" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="49,10,0,25" FontSize="10"/>
+                    <Label x:Name="IKtestZ" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="94,10,0,25" FontSize="10"/>
+                    <Label x:Name="IKtestRX" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="139,10,0,25" FontSize="10"/>
+                    <Label x:Name="IKtestRY" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="184,10,0,25" FontSize="10"/>
+                    <Label x:Name="IKtestRZ" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="229,10,0,25" FontSize="10"/>
+                    <Label x:Name="IKtestJ1" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="4,35,0,0" FontSize="10"/>
+                    <Label x:Name="IKtestJ2" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="49,35,0,0" FontSize="10"/>
+                    <Label x:Name="IKtestJ3" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="94,35,0,0" FontSize="10"/>
+                    <Label x:Name="IKtestJ4" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="139,35,0,0" FontSize="10"/>
+                    <Label x:Name="IKtestJ5" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="184,35,0,0" FontSize="10"/>
+                    <Label x:Name="IKtestJ6" Content="-" Background="#FFE8E8E8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="229,35,0,0" FontSize="10"/>
+                    <Label Content="Joint" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="46" VerticalContentAlignment="Center" Padding="0" Margin="274,35,0,0" FontSize="10" Foreground="White"/>
+                    <Label Content="Cartesian" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="46" VerticalContentAlignment="Center" Padding="0" Margin="274,10,0,0" FontSize="10" Foreground="White"/>
+                </Grid>
+            </GroupBox>
+            <Expander x:Name="MotionPath_Expander" Header="Motion Path" Margin="10,39,0,0" Background="#33FFFFFF" HorizontalAlignment="Left" Height="397" VerticalAlignment="Top" Width="172" IsExpanded="True">
+                <Grid>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Height="86" Background="#3335BFFF">
+                        <Button x:Name="btn_Add_Default" Content="+Bezier" HorizontalAlignment="Left" Height="20" Margin="5,8,0,0" VerticalAlignment="Top" Width="50" Click="btn_Add_Default_Click"/>
+                        <Button x:Name="btn_Add_Arc" Content="+Arc" HorizontalAlignment="Left" Height="20" Margin="115,8,0,0" VerticalAlignment="Top" Width="50" Click="btn_Add_Arc_Click"/>
+                        <Button x:Name="btn_Add_Linear" Content="+Linear" HorizontalAlignment="Left" Height="20" Margin="60,8,0,0" VerticalAlignment="Top" Width="50" Click="btn_Add_Linear_Click"/>
+                        <Button x:Name="btn_reset" Content="Reset" HorizontalAlignment="Left" Margin="5,58,0,0" VerticalAlignment="Top" Width="50" Height="20" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btn_reset_Click"/>
+                        <Button x:Name= "btn_open" Content="Open" HorizontalAlignment="Left" Height="20" Margin="115,33,0,0" VerticalAlignment="Top" Width="50" Click="btn_open_Click" />
+                        <Button x:Name= "btn_save" Content="Save" HorizontalAlignment="Left" Height="20" Margin="60,33,0,0" VerticalAlignment="Top" Width="50" Click="btn_save_Click" />
+                        <Button x:Name= "btn_delete" Content="Delete" HorizontalAlignment="Left" Margin="5,33,0,0" Width="50" Click="btn_delete_Click" Height="20" Padding="0" VerticalAlignment="Top" />
+                        <Label VerticalAlignment="Top" Foreground="Black" Height="16" FontSize="8" Margin="68,61,0,0" VerticalContentAlignment="Center" Content="Show control points" Padding="0" HorizontalContentAlignment="Right" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="show_ctrl_chk" x:FieldModifier="public" Content="" Margin="0,61,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Unchecked="show_ctrl_chk_Click" Checked="show_ctrl_chk_Click" IsChecked="False" Width="16"/>
+
+                    </Grid>
+                    <Grid Margin="0,86,0,0" Background="#3347FF79" HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Height="130">
+                        <Label Content="Point Data" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0" Height="20" Padding="0" />
+                        <Label Content="X" Margin="6,24,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" FontSize="10" />
+                        <TextBox x:Name="tb_sim_selpoint_x"  Width="50" Height="20" Margin="22,24,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="bias_Changed"/>
+                        <Label VerticalAlignment="Top" Foreground="Black" Height="16" FontSize="8" Margin="92,85,0,0" Content="Link Handles" Padding="0" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <CheckBox x:Name="link_handle_chk" x:FieldModifier="public" Content="" HorizontalAlignment="Left" Margin="138,85,0,0" VerticalAlignment="Top" Width="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Y" Margin="6,43,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" FontSize="10" />
+                        <TextBox x:Name="tb_sim_selpoint_y"  Width="50" Height="20" Margin="22,43,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="bias_Changed"/>
+                        <Label Content="Z" Margin="6,62,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" FontSize="10" />
+                        <TextBox x:Name="tb_sim_selpoint_z"  Width="50" Height="20" Margin="22,62,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="bias_Changed"/>
+                        <Label Content="#" Margin="109,5,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="13" FontSize="10" />
+                        <TextBox x:Name="tb_sim_pointdata_id" Height="20" Margin="121,5,0,0" IsReadOnly="True" IsUndoEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32"/>
+                        <Label Content="Rx" Margin="85,24,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" FontSize="10" />
+                        <TextBox x:Name="tb_sim_selpoint_rx"  Width="50" Height="20" Margin="103,24,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Content="Ry" Margin="85,43,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" FontSize="10" />
+                        <TextBox x:Name="tb_sim_selpoint_ry"  Width="50" Height="20" Margin="103,43,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Content="Rz" Margin="85,62,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" FontSize="10" />
+                        <TextBox x:Name="tb_sim_selpoint_rz"  Width="50" Height="20" Margin="103,62,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Button x:Name= "btn_sim_PointPrevious" Content="Prev" HorizontalAlignment="Left" Height="20" Margin="47,105,0,0" VerticalAlignment="Top" Width="35" Click="btn_SimPointPrevious_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" Padding="0,0,0,1"/>
+                        <Button x:Name= "btn_sim_PointNext" Content="Next" HorizontalAlignment="Left" Height="20" Margin="87,105,0,0" VerticalAlignment="Top" Width="35" Click="btn_SimPointNext_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" Padding="0,0,0,1"/>
+                        <Button x:Name= "btn_sim_PointFirst" Content="First" HorizontalAlignment="Left" Height="20" Margin="7,105,0,0" VerticalAlignment="Top" Width="35" Click="btn_SimPointFirst_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" Padding="0,0,0,1"/>
+                        <Button x:Name= "btn_sim_PointLast" Content="Last" HorizontalAlignment="Left" Height="20" Margin="127,105,0,0" VerticalAlignment="Top" Width="35" Click="btn_SimPointLast_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" Padding="0,0,0,1"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="47" Width="170" Margin="0,216,0,0" Background="#33FFB637">
+                        <Label Content="Distance" Margin="6,22,0,0" Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="44" FontSize="10" />
+                        <TextBox x:Name="tb_sim_TargetDistance"  Width="60" Height="20" Margin="50,22,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label VerticalAlignment="Top" Foreground="Black" Height="16" FontSize="8" Margin="98,4,0,0" VerticalContentAlignment="Center" Content="Tracking line" Padding="0" HorizontalContentAlignment="Right" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="show_tracking_line" x:FieldModifier="public" Content="" Margin="0,4,8,0" HorizontalAlignment="Right" VerticalAlignment="Top" Unchecked="show_tracking_line_Checked" Checked="show_tracking_line_Checked" IsChecked="False" Width="16"/>
+                        <Label Content="Target Tracking" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0" Height="20" Padding="0" />
+                    </Grid>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="59" Width="170" Margin="0,263,0,0" Background="#33FF0074">
+                        <Label Content="Duration" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Foreground="Black" Height="22" FontWeight="Bold" Padding="0" Width="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="10"/>
+                        <TextBox x:Name="tb_sim_duration" Text="00:00:00.000" HorizontalAlignment="Left" Height="22" Margin="64,5,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="68" TextChanged="tb_SimDuration_TextChanged" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Label Content="Step Size" HorizontalAlignment="Left" Margin="26,33,0,0" VerticalAlignment="Top" Width="54" Height="22" FontSize="10" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontWeight="Bold"/>
+                        <TextBox x:Name="tb_sim_player_StepSize" HorizontalAlignment="Left" Height="22" Margin="85,32,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Right" Width="40"/>
+
+                    </Grid>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="52" Width="170" Margin="0,322,0,0">
+                        <Label Content="Distance" HorizontalAlignment="Left" Margin="1,2,0,0" VerticalAlignment="Top" Foreground="Black" Height="20" FontWeight="Bold" Padding="0" Width="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="10"/>
+                        <Label x:Name="lbl_total_distance" HorizontalAlignment="Left" Height="20" Margin="66,2,0,0" Content="0" VerticalAlignment="Top" Width="40" Foreground="#FF474747" Background="#FFECECEC" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0" />
+                        <Label x:Name="lbl_total_length" Content="0" HorizontalAlignment="Left" Height="20" Margin="66,28,0,0" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" Padding="0" Background="#FFECECEC" HorizontalContentAlignment="Center" FontSize="10"/>
+                        <Label Content="Total length" HorizontalAlignment="Left" Margin="1,28,0,0" VerticalAlignment="Top" Foreground="Black" Height="20" FontWeight="Bold" Padding="0" Width="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="10"/>
+                        <Button x:Name="btn_Calculate" Content="Calculate" HorizontalAlignment="Left" Height="20" Margin="111,28,0,0" VerticalAlignment="Top" Width="54" Click="btn_Calculate_Click"/>
+                    </Grid>
+                </Grid>
+            </Expander>
+            <Expander x:Name="Simulator_Expander" Header="Simulator" Margin="263,40,-443,0" Background="#33FFFFFF" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="180" IsExpanded="True" Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="91*"/>
+                        <ColumnDefinition Width="87*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Margin="0,0,0,310" Grid.ColumnSpan="2">
+                        <Button x:Name="btn_Sync3DSim" Content="3D SYNC" HorizontalAlignment="Left" Margin="4,2,0,0" VerticalAlignment="Top" Width="60" Height="22" Click="btn_Sync3DSim_Click" Background="#FFBD4444" Padding="0" />
+                        <Button x:Name="btn_3DTracerToggle" Content="Tracer OFF" HorizontalAlignment="Left" Margin="69,2,0,0" VerticalAlignment="Top" Width="64" Height="22" Padding="0" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btn_3DTracerToggle_Click" />
+                        <Button x:Name="btn_3DTracerClear" Content="Clear" HorizontalAlignment="Left" Margin="134,2,0,0" VerticalAlignment="Top" Width="40" Height="22" Padding="0" Grid.IsSharedSizeScope="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btn_3DTracerClear_Click" />
+                    </Grid>
+                    <Grid Margin="0,26,0,171" Grid.ColumnSpan="2">
+                        <Label Content="J1" HorizontalAlignment="Left" Margin="3,2,0,0" VerticalAlignment="Top" Width="16" Foreground="WhiteSmoke" FontWeight="Bold" Height="22" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Label Content="J2" HorizontalAlignment="Left" Margin="3,24,0,0" VerticalAlignment="Top" Width="16" Foreground="WhiteSmoke" FontWeight="Bold" Height="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0"/>
+                        <Label Content="J3" HorizontalAlignment="Left" Margin="3,46,0,0" VerticalAlignment="Top" Width="16" Foreground="WhiteSmoke" FontWeight="Bold" Height="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0"/>
+                        <Label Content="J4" HorizontalAlignment="Left" Margin="3,68,0,0" VerticalAlignment="Top" Width="16" Foreground="WhiteSmoke" FontWeight="Bold" Height="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0"/>
+                        <Label Content="J5" HorizontalAlignment="Left" Margin="3,90,0,0" VerticalAlignment="Top" Width="16" Foreground="WhiteSmoke" FontWeight="Bold" Height="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0"/>
+                        <Label Content="J6" HorizontalAlignment="Left" Margin="3,112,0,0" VerticalAlignment="Top" Width="16" Foreground="WhiteSmoke" FontWeight="Bold" Height="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0"/>
+                        <Slider x:Name="slider_simPos_J1" HorizontalAlignment="Left" Margin="21,3,0,0" VerticalAlignment="Top" Width="100"  Maximum="180" Minimum="-180" ValueChanged="SimJoint_Slider_ValueChanged" LargeChange="0.1" TickFrequency="0.1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_J2" HorizontalAlignment="Left" Margin="21,25,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimJoint_Slider_ValueChanged" LargeChange="0.1" TickFrequency="0.1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_J3" HorizontalAlignment="Left" Margin="21,47,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimJoint_Slider_ValueChanged" LargeChange="0.1" TickFrequency="0.1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_J4" HorizontalAlignment="Left" Margin="21,69,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimJoint_Slider_ValueChanged" LargeChange="0.1" TickFrequency="0.1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_J5" HorizontalAlignment="Left" Margin="21,91,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimJoint_Slider_ValueChanged" LargeChange="0.1" TickFrequency="0.1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_J6" HorizontalAlignment="Left" Margin="21,113,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimJoint_Slider_ValueChanged" LargeChange="0.1" TickFrequency="0.1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_J1" Text="{Binding Value, ElementName=slider_simPos_J1, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="123,3,0,0"  VerticalAlignment="Top" Width="50" Foreground="Black" FontSize="10" Height="20" VerticalContentAlignment="Center" Padding="0" Background="#CCFFFFFF" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_J2" Text="{Binding Value, ElementName=slider_simPos_J2, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="123,25,0,0"  VerticalAlignment="Top" Width="50" Foreground="Black" FontSize="10" Height="20" VerticalContentAlignment="Center" Padding="0" Background="#CCFFFFFF" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_J3" Text="{Binding Value, ElementName=slider_simPos_J3, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="123,47,0,0"  VerticalAlignment="Top" Width="50" Foreground="Black" FontSize="10" Height="20" VerticalContentAlignment="Center" Padding="0" Background="#CCFFFFFF" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_J4" Text="{Binding Value, ElementName=slider_simPos_J4, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="123,69,0,0"  VerticalAlignment="Top" Width="50" Foreground="Black" FontSize="10" Height="20" VerticalContentAlignment="Center" Padding="0" Background="#CCFFFFFF" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_J5" Text="{Binding Value, ElementName=slider_simPos_J5, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="123,91,0,0"  VerticalAlignment="Top" Width="50" Foreground="Black" FontSize="10" Height="20" VerticalContentAlignment="Center" Padding="0" Background="#CCFFFFFF" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_J6" Text="{Binding Value, ElementName=slider_simPos_J6, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="123,113,0,0"  VerticalAlignment="Top" Width="50" Foreground="Black" FontSize="10" Height="20" VerticalContentAlignment="Center" Padding="0" Background="#CCFFFFFF" HorizontalContentAlignment="Center"/>
+                    </Grid>
+                    <Grid Margin="0,165,0,28" Grid.ColumnSpan="2">
+                        <Label Content="X" HorizontalAlignment="Left" Margin="3,4,0,0" VerticalAlignment="Top" Foreground="White" Height="22" Padding="0" Width="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
+                        <Label Content="Y" HorizontalAlignment="Left" Margin="3,26,0,0" VerticalAlignment="Top" Foreground="White" Height="22" Width="22" VerticalContentAlignment="Center" Padding="0" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                        <Label Content="Z" HorizontalAlignment="Left" Margin="3,48,0,0" VerticalAlignment="Top" Foreground="White" Height="22" Width="22" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
+                        <Label Content="RX" HorizontalAlignment="Left" Margin="3,70,0,0" VerticalAlignment="Top" Foreground="White" Height="22" Width="22" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
+                        <Label Content="RY" HorizontalAlignment="Left" Margin="3,92,0,0" VerticalAlignment="Top" Foreground="White" Height="22" Width="22" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
+                        <Label Content="RZ" HorizontalAlignment="Left" Margin="3,114,0,0" VerticalAlignment="Top" Foreground="White" Height="22" Width="22" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
+                        <Slider x:Name="slider_simPos_x" HorizontalAlignment="Left" Margin="21,6,0,0" VerticalAlignment="Top" Width="100"  Maximum="2500" Minimum="-2500" ValueChanged="SimCartesian_Slider_ValueChanged" LargeChange="1" TickFrequency="10" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_y" HorizontalAlignment="Left" Margin="21,28,0,0" VerticalAlignment="Top" Width="100" Maximum="2500" Minimum="-2500" ValueChanged="SimCartesian_Slider_ValueChanged" LargeChange="1" TickFrequency="10" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_z" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Width="100" Maximum="2500" Minimum="-2500" ValueChanged="SimCartesian_Slider_ValueChanged" LargeChange="1" TickFrequency="10" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_rx" HorizontalAlignment="Left" Margin="21,72,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimCartesian_Slider_ValueChanged" LargeChange="1" TickFrequency="1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_ry" HorizontalAlignment="Left" Margin="21,94,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimCartesian_Slider_ValueChanged" LargeChange="1" TickFrequency="1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="slider_simPos_rz" HorizontalAlignment="Left" Margin="21,116,0,0" VerticalAlignment="Top" Width="100" Maximum="180" Minimum="-180" ValueChanged="SimCartesian_Slider_ValueChanged" LargeChange="1" TickFrequency="1" Height="22" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <TextBox x:Name="tb_simPos_x" Text="{Binding Value, ElementName=slider_simPos_x, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="21" Margin="123,5,0,0" VerticalAlignment="Top" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" BorderBrush="{x:Null}" Background="#CCFFFFFF" />
+                        <TextBox x:Name="tb_simPos_y" Text="{Binding Value, ElementName=slider_simPos_y, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="21" Margin="123,27,0,0" VerticalAlignment="Top" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" BorderBrush="{x:Null}" Background="#CCFFFFFF" />
+                        <TextBox x:Name="tb_simPos_z" Text="{Binding Value, ElementName=slider_simPos_z, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="21" Margin="123,49,0,0" VerticalAlignment="Top"  Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" BorderBrush="{x:Null}" Background="#CCFFFFFF" />
+                        <TextBox x:Name="tb_simPos_rx" Text="{Binding Value, ElementName=slider_simPos_rx, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="21" Margin="123,71,0,0" VerticalAlignment="Top"  Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" BorderBrush="{x:Null}" Background="#CCFFFFFF" />
+                        <TextBox x:Name="tb_simPos_ry" Text="{Binding Value, ElementName=slider_simPos_ry, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="21" Margin="123,93,0,0" VerticalAlignment="Top"  Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" BorderBrush="{x:Null}" Background="#CCFFFFFF" />
+                        <TextBox x:Name="tb_simPos_rz" Text="{Binding Value, ElementName=slider_simPos_rz, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="21" Margin="123,115,0,0" VerticalAlignment="Top"  Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" BorderBrush="{x:Null}" Background="#CCFFFFFF" />
+
+                    </Grid>
+                    <Button Content="Load Mdl" Click="Load3DModel" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="73,306,0,0" Height="22" Grid.ColumnSpan="2" />
+                    <Button x:Name= "btn_Go_Home" Content="Home" HorizontalAlignment="Left" Height="22" Margin="41.333,306,0,0" VerticalAlignment="Top" Width="41" Click="btn_Go_Home_Click" Grid.Column="1"/>
+                    <Label VerticalAlignment="Top" Foreground="Black" Height="16" FontSize="8" Margin="3,312,0,0" VerticalContentAlignment="Center" Content="Show robot" Padding="0" HorizontalContentAlignment="Right" HorizontalAlignment="Left"/>
+                    <CheckBox x:Name="show_robot_arm" x:FieldModifier="public" Content="" Margin="0,311,25.667,0" HorizontalAlignment="Right" VerticalAlignment="Top" Unchecked="show_robot_arm_Click" Checked="show_robot_arm_Click" IsChecked="True" Width="16"/>
+                    <Button x:Name="btn_allow_FK" Content="Allow IK" Click="switchFKandIK" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="65,338,0,0" Height="22" Grid.ColumnSpan="2" />
+
+
+                </Grid>
+            </Expander>
+            <Border x:Name="box_3D_Playback" Margin="493,818,0,-354" Background="#33808080" BorderThickness="0" CornerRadius="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="493" Height="40">
+                <Grid Margin="6,5,6,0">
+                    <Button x:Name= "btn_sim_player_StepReverse" Content="&lt; Step" HorizontalAlignment="Left" Width="46" Margin="6,0,0,6" FontSize="12" Height="27" VerticalAlignment="Bottom"/>
+                    <Button x:Name= "btn_sim_player_PlayReverse" Content="&lt; Play" HorizontalAlignment="Left" Width="46" Click="btn_PlayReverse_Click" Margin="55,0,0,6" FontSize="12" RenderTransformOrigin="-0.167,2.364" Height="27" VerticalAlignment="Bottom"/>
+                    <Button x:Name= "btn_sim_player_Pause" Content="Pause" HorizontalAlignment="Left" Width="46"  Margin="104,0,0,6" Click="btn_Pause_Click" FontSize="12" Height="27" VerticalAlignment="Bottom"/>
+                    <Button x:Name= "btn_sim_player_Stop" Content="Stop" HorizontalAlignment="Left" Width="46" Click="btn_sim_player_Stop_Click" Margin="153,0,0,6" FontSize="12" Height="27" VerticalAlignment="Bottom"/>
+                    <Button x:Name= "btn_sim_player_PlayForward" Content="Play &gt;" HorizontalAlignment="Left" Width="46" Click="btn_PlayForward_Click" Margin="202,0,0,6" FontSize="12" Height="27" VerticalAlignment="Bottom"/>
+                    <Button x:Name= "btn_sim_player_StepForward" Content="Step &gt;" HorizontalAlignment="Left" Width="46" Margin="251,0,0,6" FontSize="12" Height="27" VerticalAlignment="Bottom"/>
+                    <Slider x:Name="slider_sim_player_TimeSlider" HorizontalAlignment="Left" Margin="302,0,0,9" VerticalAlignment="Bottom" Width="98" Height="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0"/>
+                    <Label x:Name="lbl_sim_player_CurrentPlayPos" HorizontalAlignment="Left" Height="24" Margin="396,0,-6,11" Content="00:00:00.000" VerticalAlignment="Bottom" Width="91" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" FontWeight="Bold"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <Border x:Name="btn_fancy" Margin="0,445,88,0" Background="Gray" BorderThickness="0" CornerRadius="5,5,5,5" HorizontalAlignment="Right" VerticalAlignment="Top" Height="22" Width="48" RenderTransformOrigin="4.729,2.136">
+            <Grid Margin="0">
+                <TextBlock x:Name="btn_3D_EnablePan" Text="Pan OFF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="6,4,6,4" Margin="0,0,0,1" MouseLeftButtonDown="btn_3D_EnablePan_Click" FontSize="10" RenderTransformOrigin="0.646,5.758" />
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
