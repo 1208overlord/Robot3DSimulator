@@ -14,4 +14,4 @@ This project is expanding for further usage.
 
 All source and executable are ready and if any help, we will be so appreciated if let us know.
 
-*** For more information about this project, contact to us.(e-mail : andrey201917@yandex.com) ***
+*** For more information about this project, contact to us.(e-mail : andrey201917@yandex.com, SKYPE : live:andrey201917) ***
